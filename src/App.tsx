@@ -5,6 +5,7 @@ import { authLoader } from "./features/auth/api/AuthLoader";
 import LayoutMain from "./shared/layouts/LayoutMain";
 import ErrorBoundary from "./shared/components/ErrorBoundary";
 import NotFoundPage from "./shared/pages/NotFoundPage";
+import { ReactQueryProvider } from "./shared/components/ReactQueryProvider";
 
 
 const router = createBrowserRouter([
