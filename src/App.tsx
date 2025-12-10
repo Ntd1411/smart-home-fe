@@ -3,6 +3,9 @@ import ROUTES from "./shared/lib/routes";
 import AuthGuard from "./features/auth/components/AuthGuard";
 import { authLoader } from "./features/auth/api/AuthLoader";
 import LayoutMain from "./shared/layouts/LayoutMain";
+import ErrorBoundary from "./shared/components/ErrorBoundary";
+import NotFoundPage from "./shared/pages/NotFoundPage";
+
 
 const router = createBrowserRouter([
   {
