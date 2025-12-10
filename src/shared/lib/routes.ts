@@ -4,25 +4,25 @@ const ROUTES = {
     title: 'Trang chủ',
     url: '/'
   },
-  ACCOUNTS: {
-    title: 'Tài khoản',
-    url: '/accounts'
-  },
   LOGIN: {
     title: 'Đăng nhập',
     url: '/login'
   },
+  USERS: {
+    title: 'Người dùng',
+    url: '/users'
+  },
   USER_CREATE: {
-    title: 'Thêm nhân viên',
+    title: 'Thêm thêm người dùng',
     url: '/users/create'
   },
   USER_EDIT: {
-    title: 'Sửa nhân viên',
+    title: 'Sửa người dùng',
     url: `/users/:id/edit`,
     getPath: (id: string) => `/users/${id}/edit`
   },
   USER_VIEW: {
-    title: 'Chi tiết nhân viên',
+    title: 'Chi tiết người dùng',
     url: `/users/:id/view`,
     getPath: (id: string) => `/users/${id}/view`
   },

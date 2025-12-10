@@ -14,10 +14,6 @@ const router = createBrowserRouter([
         element: <LayoutMain />,
         children: [
           {
-            path: ROUTES.ACCOUNTS.url,
-            element: <AccountsPage />
-          },
-          {
             path: ROUTES.USER_CREATE.url,
             element: <UserCreatePage />
           },

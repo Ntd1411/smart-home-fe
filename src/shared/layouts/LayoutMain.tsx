@@ -1,7 +1,7 @@
 import { useMeQuery } from '@/features/auth/api/AuthService'
 // import { useBackupSocket } from '@/features/backups/hooks/useBackupSocket'
 import { Link, Outlet, useLocation } from 'react-router'
-import { AppSidebar } from '../components/app-sidebar'
+import { AppSidebar } from '../components/AppSidebar'
 import CommonDialog from '../components/CommonAlertDialog'
 import ErrorBoundary from '../components/ErrorBoundary'
 import LoadingSpinner from '../components/LoadingSpinner'
@@ -23,9 +23,8 @@ export default function LayoutMain() {
   // Initialize socket listeners for backup events
   // useBackupSocket()
   const { isLoading, isPending } = useMeQuery()
-  const { isLoading: isSettingsLoading } = useGetSettings()
 
-  if (isLoading || isPending || isSettingsLoading) {
+  if (isLoading || isPending) {
     return (
       <div className='flex justify-center items-center h-screen w-screen fixed inset-0 z-50 bg-[url(/debut-light.png)] bg-fixed'>
         <LoadingSpinner isLoading={true} />
