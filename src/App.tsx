@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, RouterProvider } from "react-router";
 import ROUTES from "./shared/lib/routes";
 import AuthGuard from "./features/auth/components/AuthGuard";
 import { authLoader } from "./features/auth/api/AuthLoader";
@@ -6,6 +6,8 @@ import LayoutMain from "./shared/layouts/LayoutMain";
 import ErrorBoundary from "./shared/components/ErrorBoundary";
 import NotFoundPage from "./shared/pages/NotFoundPage";
 import { ReactQueryProvider } from "./shared/components/ReactQueryProvider";
+import { Toaster } from "sonner";
+import GlobalLoadingProvider from "./shared/components/GlobalLoading";
 
 
 const router = createBrowserRouter([
@@ -77,7 +79,6 @@ export default function App() {
       <GlobalLoadingProvider>
         <SocketProvider>
           <RouterProvider router={router} />
-          <ImagePreviewDialog />
         </SocketProvider>
       </GlobalLoadingProvider>
       <Toaster position='top-right' richColors theme='light' />
