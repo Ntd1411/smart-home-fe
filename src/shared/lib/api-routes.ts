@@ -2,7 +2,8 @@ const API_ROUTES = {
   AUTH: {
     LOGIN: '/v1/auth/login',
     REFRESH_TOKEN: '/v1/auth/refresh-token',
-    LOGOUT: '/v1/auth/logout'
+    LOGOUT: '/v1/auth/logout',
+    ME: 'v1/auth/me'
   },
   ACADEMIC_YEARS: '/v1/academic-years',
   FACULTIES: {

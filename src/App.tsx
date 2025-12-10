@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router";
 import ROUTES from "./shared/lib/routes";
 import AuthGuard from "./features/auth/components/AuthGuard";
 import { authLoader } from "./features/auth/api/AuthLoader";
+import LayoutMain from "./shared/layouts/LayoutMain";
 
 const router = createBrowserRouter([
   {
