@@ -9,7 +9,8 @@ import { ReactQueryProvider } from "./shared/components/ReactQueryProvider";
 import { Toaster } from "sonner";
 import GlobalLoadingProvider from "./shared/components/GlobalLoading";
 import LoginPage from "./features/auth/pages/LoginPage";
-
+import UserPage from "./features/users/page/UserPage";
+import UserCreatePage from "./features/users/page/UserCreatePage";
 
 const router = createBrowserRouter([
   {
@@ -20,10 +21,14 @@ const router = createBrowserRouter([
         path: ROUTES.HOME.url,
         element: <LayoutMain />,
         children: [
-          // {
-          //   path: ROUTES.USER_CREATE.url,
-          //   element: <UserCreatePage />
-          // },
+          {
+            path: ROUTES.USERS.url,
+            element: <UserPage/>
+          },
+          {
+            path: ROUTES.USER_CREATE.url,
+            element: <UserCreatePage />
+          },
           // {
           //   path: ROUTES.USER_EDIT.url,
           //   element: <UserEditPage />
