@@ -8,6 +8,7 @@ import {
 import { useMutation, useQuery } from '@tanstack/react-query'
 import useAuthStore from '../stores/authStore'
 import { toast } from 'sonner'
+import { queryClient } from '@/shared/components/ReactQueryProvider'
 
 
 export const useLoginMutation = () => {
@@ -35,6 +36,24 @@ export const useMeQuery = () => {
       } catch (error: any) {
         return null
       }
+    }
+  })
+}
+
+
+export const useLogoutMutation = () => {
+  const logout = useAuthStore((state) => state.logout)
+  return useMutation({
+    mutationFn: (refreshToken: string) => api.post(API_ROUTES.AUTH.LOGOUT, { refreshToken }),
+    onSuccess: () => {
+      logout()
+      queryClient.clear()
+      toast.success('Đăng xuất thành công.')
+    },
+    onError: (error: any) => {
+      logout()
+      queryClient.clear()
+      toast.error(error.message || 'Đăng xuất thất bại.')
     }
   })
 }
