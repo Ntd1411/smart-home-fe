@@ -12,6 +12,7 @@ import LoginPage from "./features/auth/pages/LoginPage";
 import UserPage from "./features/users/page/UserPage";
 import UserCreatePage from "./features/users/page/UserCreatePage";
 import UserEditPage from "./features/users/page/UserEditPage";
+import UserViewPage from "./features/users/page/UserViewPage";
 
 const router = createBrowserRouter([
   {
@@ -34,10 +35,10 @@ const router = createBrowserRouter([
             path: ROUTES.USER_EDIT.url,
             element: <UserEditPage />
           },
-          // {
-          //   path: ROUTES.USER_VIEW.url,
-          //   element: <UserViewPage />
-          // },
+          {
+            path: ROUTES.USER_VIEW.url,
+            element: <UserViewPage />
+          },
           // {
           //   path: ROUTES.PERMISSIONS.url,
           //   element: <PermissionsPage />
