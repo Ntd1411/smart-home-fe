@@ -1,7 +1,7 @@
 import { queryClient } from "@/shared/components/ReactQueryProvider"
 import api from "@/shared/lib/api"
 import API_ROUTES from "@/shared/lib/api-routes"
-import { type CreateUser, type UsersResponse } from "@/shared/validations/UserSchema"
+import { type CreateUser, type UpdateUser, type User, type UsersResponse } from "@/shared/validations/UserSchema"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { toast } from "sonner"
 
@@ -57,5 +57,36 @@ export const useDeleteUserMutation = () => {
     onError: (error: any) => {
       toast.error(error?.message || 'Xóa người dùng thất bại')
     }
+  })
+}
+
+export const useUpdateUserMutation = (id: String | undefined
+) => {
+   return useMutation({
+    mutationFn: (data: UpdateUser) => {
+      return api.patch<UsersResponse>(`${API_ROUTES.USERS}/${id}`, data)
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['users']
+      })
+      queryClient.invalidateQueries({queryKey: ['user', id]})
+      toast.success("Cập nhật người dùng thành công")
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Cập nhật người dùng thất bại")
+    }
+  })
+}
+
+
+export const useGetUserDetailQuery = (id: String | undefined) => {
+  return useQuery({
+    queryKey: ["users", id],
+    queryFn: () => api.get<User>(`${API_ROUTES.USERS}/${id}`),
+    // chuyển giá trị id thành kiểu boolean một cách rõ ràng
+    // vd: id=0 -> !!!id === false
+    enabled: !!id
   })
 }

@@ -22,6 +22,7 @@ interface UserFormProps {
 }
 
 export const UserForm = ({ user, onSubmit, isLoading, mode }: UserFormProps) => {
+  console.log(user);
   const isViewMode = mode === 'view'
   const isCreateMode = mode === 'create'
 

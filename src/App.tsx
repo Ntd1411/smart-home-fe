@@ -11,6 +11,7 @@ import GlobalLoadingProvider from "./shared/components/GlobalLoading";
 import LoginPage from "./features/auth/pages/LoginPage";
 import UserPage from "./features/users/page/UserPage";
 import UserCreatePage from "./features/users/page/UserCreatePage";
+import UserEditPage from "./features/users/page/UserEditPage";
 
 const router = createBrowserRouter([
   {
@@ -29,10 +30,10 @@ const router = createBrowserRouter([
             path: ROUTES.USER_CREATE.url,
             element: <UserCreatePage />
           },
-          // {
-          //   path: ROUTES.USER_EDIT.url,
-          //   element: <UserEditPage />
-          // },
+          {
+            path: ROUTES.USER_EDIT.url,
+            element: <UserEditPage />
+          },
           // {
           //   path: ROUTES.USER_VIEW.url,
           //   element: <UserViewPage />
