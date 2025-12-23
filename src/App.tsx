@@ -19,6 +19,8 @@ import { UserCreatePage } from "./features/users/page/UserCreatePage";
 import { RoleCreatePage } from "./features/roles/pages/RoleCreatePage";
 import { OverviewPage } from "./features/overview/pages/OverviewPage";
 import { RoomDetailPage } from "./features/rooms/pages/RoomDetailPage";
+import { SettingPage } from "./features/setting/pages/SettingPage";
+import { PermissionsPage } from "./features/permissions/pages/PermissionsPage";
 
 const router = createBrowserRouter([
   {
@@ -45,10 +47,10 @@ const router = createBrowserRouter([
             path: ROUTES.USER_VIEW.url,
             element: <UserViewPage />
           },
-          // {
-          //   path: ROUTES.PERMISSIONS.url,
-          //   element: <PermissionsPage />
-          // },
+          {
+            path: ROUTES.PERMISSIONS.url,
+            element: <PermissionsPage />
+          },
           {
             path: ROUTES.ROLES.url,
             element: <RolePage />
@@ -77,6 +79,10 @@ const router = createBrowserRouter([
           {
             path: ROUTES.ROOM_DETAIL.url,
             element: <RoomDetailPage />
+          },
+          {
+            path: ROUTES.SETTING.url,
+            element: <SettingPage />          
           }
         ]
       }

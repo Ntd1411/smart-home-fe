@@ -6,7 +6,6 @@ import {
 } from "@/shared/components/ui/card";
 import { Badge } from "@/shared/components/ui/badge";
 import {
-  Lightbulb,
   Thermometer,
   Droplets,
   AlertTriangle,
@@ -25,7 +24,6 @@ interface RoomListProps {
 export const RoomList = ({ rooms }: RoomListProps) => {
   const navigate = useNavigate();
   console.log("Rendering RoomList with rooms:", rooms);
-  
 
   if (rooms.length === 0) {
     return (
@@ -130,11 +128,29 @@ export const RoomList = ({ rooms }: RoomListProps) => {
                 )}
 
                 {/* Cảnh báo */}
-                {room.hasWarning && room.warningMessage && (
-                  <div className="mt-3 p-2 rounded-md bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800">
-                    <p className="text-xs text-orange-800 dark:text-orange-200">
-                      {room.warningMessage}
-                    </p>
+                {room.hasWarning && (
+                  <div className="mt-3 space-y-1">
+                    {room.temperatureWarningMessage && (
+                      <div className="p-2 rounded-md bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800">
+                        <p className="text-xs text-orange-800 dark:text-orange-200">
+                          {room.temperatureWarningMessage}
+                        </p>
+                      </div>
+                    )}
+                    {room.humidityWarningMessage && (
+                      <div className="p-2 rounded-md bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800">
+                        <p className="text-xs text-orange-800 dark:text-orange-200">
+                          {room.humidityWarningMessage}
+                        </p>
+                      </div>
+                    )}
+                    {room.gasWarningMessage && (
+                      <div className="p-2 rounded-md bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800">
+                        <p className="text-xs text-orange-800 dark:text-orange-200">
+                          {room.gasWarningMessage}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

@@ -3,6 +3,8 @@ import { Button } from "@/shared/components/ui/button"
 import { Lightbulb, Lock } from "lucide-react"
 import { useTurnOffAllLightsMutation, useLockAllDoorsMutation, useGetOverviewQuery } from "../api/OverviewService"
 import { Loader2 } from "lucide-react"
+import { ComponentWithPermissionGuard } from "@/shared/components/ComponentWithPermissionGuard"
+import { PERMISSIONS } from "@/shared/constants/permissions"
 
 export default function QuickActions() {
   const { data } = useGetOverviewQuery();
@@ -36,34 +38,38 @@ export default function QuickActions() {
       </CardHeader>
       <CardContent>
         <div className="flex flex-col sm:flex-row gap-3">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handleToggleAllLights}
-            disabled={isTurningOffLights}
-            className="flex-1"
-          >
-            {isTurningOffLights ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Lightbulb className="w-4 h-4" />
-            )}
-            {isAllLightsOff ? "Bật tất cả đèn" : "Tắt tất cả đèn"}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handleToggleAllDoors}
-            disabled={isTogglingDoors}
-            className="flex-1"
-          >
-            {isTogglingDoors ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Lock className="w-4 h-4" />
-            )}
-            {isAllDoorsClosed ? "Mở tất cả cửa" : "Khóa tất cả cửa"}
-          </Button>
+          <ComponentWithPermissionGuard permission={PERMISSIONS.OVERVIEW.LIGHTS}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleToggleAllLights}
+              disabled={isTurningOffLights}
+              className="flex-1"
+            >
+              {isTurningOffLights ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Lightbulb className="w-4 h-4" />
+              )}
+              {isAllLightsOff ? "Bật tất cả đèn" : "Tắt tất cả đèn"}
+            </Button>
+          </ComponentWithPermissionGuard>
+          <ComponentWithPermissionGuard permission={PERMISSIONS.OVERVIEW.DOORS}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleToggleAllDoors}
+              disabled={isTogglingDoors}
+              className="flex-1"
+            >
+              {isTogglingDoors ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Lock className="w-4 h-4" />
+              )}
+              {isAllDoorsClosed ? "Mở tất cả cửa" : "Khóa tất cả cửa"}
+            </Button>
+          </ComponentWithPermissionGuard>
         </div>
       </CardContent>
     </Card>

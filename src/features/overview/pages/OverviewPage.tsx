@@ -8,9 +8,11 @@ import { Card, CardHeader, CardTitle } from "@/shared/components/ui/card"
 import { Button } from "@/shared/components/ui/button"
 import { RoomList } from "../components/RoomList"
 import { useOverviewRealtime } from "../hooks/useRooms"
+import { withPermissionGuard } from "@/shared/components/WithPermissionGuard"
+import { PERMISSIONS } from "@/shared/constants/permissions"
 
 
-export const OverviewPage = () => {
+const OverviewPageComponent = () => {
 
   useOverviewRealtime();
   // useEffect(() => {
@@ -75,3 +77,7 @@ export const OverviewPage = () => {
   )
 }
 
+export const OverviewPage = withPermissionGuard(
+  OverviewPageComponent,
+  PERMISSIONS.OVERVIEW.OVERVIEW
+)

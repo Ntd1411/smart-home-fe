@@ -18,11 +18,15 @@ import {
   Flame,
   Sun,
   Plug,
+  AlertCircle,
 } from "lucide-react";
 import { DeviceList } from "../components/DeviceList";
-import { DeviceControl } from "../components/DeviceControl";
 import ROUTES from "@/shared/lib/routes";
 import { useRoomDetail } from "../hooks/useGetRoomDetail";
+import { hasPermission } from "@/shared/lib/utils";
+import { useMeQuery } from "@/features/auth/api/AuthService";
+import LoadingSpinner from "@/shared/components/LoadingSpinner";
+import { PERMISSIONS } from "@/shared/constants/permissions";
 
 const getRoomName = (location: string) => {
   if (location === "living-room") return "Phòng khách";
@@ -32,8 +36,55 @@ const getRoomName = (location: string) => {
   return location || "Chưa xác định";
 };
 
+const ROOM_PERMISSION_GROUP = {
+  "living-room": PERMISSIONS.ROOMS.LIVING_ROOM,
+  bedroom: PERMISSIONS.ROOMS.BEDROOM,
+} as const;
+
 export const RoomDetailPage = () => {
   const { location } = useParams<{ location: string }>();
+
+  const roomPermissions =
+    ROOM_PERMISSION_GROUP[location as keyof typeof ROOM_PERMISSION_GROUP];
+
+  const {
+    data: selfInfo,
+    isLoading: isLoadingMe,
+    isPending: isPendingMe,
+  } = useMeQuery();
+  const permissions =
+    selfInfo?.data?.roles.flatMap((role) => role.permissions) || [];
+
+  // Loading state
+  if (isLoadingMe || isPendingMe) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <LoadingSpinner isLoading={true} className="py-20" />
+      </div>
+    );
+  }
+
+  const hasAccess = hasPermission(permissions, roomPermissions.DETAILS);
+
+  if (!hasAccess) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <div className="text-center space-y-4 max-w-md">
+          <div className="mx-auto w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center">
+            <AlertCircle className="h-8 w-8 text-destructive" />
+          </div>
+          <div>
+            <h2 className="text-xl font-semibold">Không có quyền truy cập</h2>
+            <p className="text-muted-foreground mt-2">
+              Bạn không có quyền truy cập tài nguyên này. Vui lòng liên hệ quản
+              trị viên để được cấp quyền.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   useRoomDetail(location);
   const navigate = useNavigate();
   const { data, isLoading, isFetching, refetch } = useGetRoomDetailQuery(
@@ -122,6 +173,12 @@ export const RoomDetailPage = () => {
             <div className="text-3xl font-bold">
               {data.temperature !== undefined ? `${data.temperature}°C` : "--"}
             </div>
+            {/* Cảnh báo */}
+            {data.temperatureWarningMessage && (
+              <p className="text-sm text-red-500 mt-1">
+                {data.temperatureWarningMessage}
+              </p>
+            )}
           </CardContent>
         </Card>
 
@@ -136,6 +193,11 @@ export const RoomDetailPage = () => {
             <div className="text-3xl font-bold">
               {data.humidity !== undefined ? `${data.humidity}%` : "--"}
             </div>
+            {data.humidityWarningMessage && (
+              <p className="text-sm text-red-500 mt-1">
+                {data.humidityWarningMessage}
+              </p>
+            )}
           </CardContent>
         </Card>
       </div>
@@ -218,16 +280,21 @@ export const RoomDetailPage = () => {
                 {data.gasLevel}
               </div>
               <p className="text-sm text-muted-foreground mt-1">ppm</p>
+              {data.gasWarningMessage && (
+                <p className="text-sm text-red-500 mt-1">
+                  {data.gasWarningMessage}
+                </p>
+              )}
             </CardContent>
           </Card>
         )}
       </div>
 
       {/* Danh sách thiết bị */}
-      <DeviceList devices={data.devices} room={data.location} />
+      <DeviceList devices={data.devices} room={data.location} permission={roomPermissions} />
 
       {/* Điều khiển thiết bị */}
-      <DeviceControl devices={data.devices} />
+      {/* <DeviceControl devices={data.devices} /> */}
     </div>
   );
 };

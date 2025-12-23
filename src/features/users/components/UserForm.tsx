@@ -30,7 +30,6 @@ import {
 } from "@/shared/components/ui/select";
 import { Separator } from "@/shared/components/ui/separator";
 import { Gender } from "@/shared/lib/enum";
-import { cn } from "@/shared/lib/utils";
 import {
   type CreateUser,
   CreateUserSchema,

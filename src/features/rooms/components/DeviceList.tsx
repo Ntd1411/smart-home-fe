@@ -13,29 +13,53 @@ import {
   DoorClosed,
   Power,
 } from "lucide-react";
-import {useTurnOffLight, type RoomDevice } from "../api/RoomService";
+import {
+  useCloseDoor,
+  useTurnOffLight,
+  type RoomDevice,
+} from "../api/RoomService";
 import { DeviceType } from "@/shared/enums/device.enum";
 import { Button } from "@/shared/components/ui/button";
+import { ComponentWithPermissionGuard } from "@/shared/components/ComponentWithPermissionGuard";
+
 
 interface DeviceListProps {
   devices: RoomDevice[];
-  room: string
+  room: string;
+  permission: any;
 }
 
-export const DeviceList = ({ devices, room }: DeviceListProps) => {
+export const DeviceList = ({ devices, room, permission }: DeviceListProps) => {
   const { mutateAsync: turnOffLight, isPending: isTurningOffLight } =
     useTurnOffLight(room);
-  const devicesList = devices.map((device) => ({
-    ...device,
-    isOn: false,
-    isControllable: true,
-  }));
+  const { mutateAsync: closeDoor, isPending: isClosingDoor } =
+    useCloseDoor(room);
+  const devicesList = devices.map((device) => {
+    if (device.type === DeviceType.DOOR || device.type === DeviceType.LIGHT) {
+      return {
+        ...device,
+        isControllable: true,
+        isOn: device.lastState === "on" || device.lastState === "open",
+      };
+    } else {
+      return {
+        ...device,
+        isControllable: false,
+        isOn: device.lastState === "on",
+      };
+    }
+  });
 
-  const handleToggleDevice = (device: RoomDevice) => {
+  const handleLightDevice = (turnOn: boolean) => {
     turnOffLight({
-      device,
-      turnOn: true
-    })
+      turnOn,
+    });
+  };
+
+  const handleDoorDevice = (open: boolean) => {
+    closeDoor({
+      open,
+    });
   };
 
   if (devicesList.length === 0) {
@@ -100,34 +124,51 @@ export const DeviceList = ({ devices, room }: DeviceListProps) => {
                 >
                   {device.status === "online" ? "Online" : "Offline"}
                 </Badge>
+
                 {/* NÚT ĐIỀU KHIỂN */}
-                {device.isControllable && device.status === "online" && (
-                  <Button
-                    size="sm"
-                    variant={device.isOn ? "destructive" : "default"}
-                    onClick={() => {
-                      // TODO: gọi API / socket
-                      console.log("Toggle device", device.id);
-                    }}
-                    className="flex items-center gap-1"
-                  >
-                    {device.type === DeviceType.LIGHT ? (
-                      <>
+                {/* LIGHT CONTROL */}
+                {device?.isControllable &&
+                  device.status === "online" &&
+                  device.type === DeviceType.LIGHT && (
+                    <ComponentWithPermissionGuard permission={permission.LIGHT}>
+                      <Button
+                        size="sm"
+                        variant={device.isOn ? "destructive" : "default"}
+                        disabled={isTurningOffLight}
+                        onClick={() => handleLightDevice(!device.isOn)}
+                        className={`flex items-center gap-1 ${
+                          isTurningOffLight ? "opacity-50" : "cursor-pointer"
+                        }`}
+                      >
                         <Power className="w-4 h-4" />
                         {device.isOn ? "Tắt" : "Bật"}
-                      </>
-                    ) : (
-                      <>
+                      </Button>
+                    </ComponentWithPermissionGuard>
+                  )}
+
+                {/* DOOR CONTROL */}
+                {device?.isControllable &&
+                  device.status === "online" &&
+                  device.type === DeviceType.DOOR && (
+                    <ComponentWithPermissionGuard permission={permission.DOOR}>
+                      <Button
+                        size="sm"
+                        variant="default"
+                        disabled={isClosingDoor}
+                        onClick={() => handleDoorDevice(!device.isOn)}
+                        className={`flex items-center gap-1 ${
+                          isClosingDoor ? "opacity-50" : "cursor-pointer"
+                        }`}
+                      >
                         {device.isOn ? (
                           <DoorClosed className="w-4 h-4" />
                         ) : (
                           <DoorOpen className="w-4 h-4" />
                         )}
                         {device.isOn ? "Đóng" : "Mở"}
-                      </>
-                    )}
-                  </Button>
-                )}
+                      </Button>
+                    </ComponentWithPermissionGuard>
+                  )}
               </div>
             </div>
           ))}

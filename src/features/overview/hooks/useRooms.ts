@@ -29,7 +29,7 @@ export const useOverviewRealtime = () => {
           if (roomIndex >= 0) {
             updatedRooms[roomIndex] = { ...updatedRooms[roomIndex], ...data };
           } else {
-            updatedRooms.push({ location: room, hasWarning: false, warningMessage: '', ...data });
+            updatedRooms.push({ location: room, hasWarning: false, ...data });
           }
 
           return { ...old, rooms: updatedRooms };

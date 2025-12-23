@@ -69,6 +69,10 @@ const ROUTES = {
   BED_ROOM: {
     title: 'Phòng ngủ',
     url: '/rooms/bedroom',
+  },
+  SETTING: {
+    title: "Cài đặt",
+    url: '/settings'
   }
 
 }
