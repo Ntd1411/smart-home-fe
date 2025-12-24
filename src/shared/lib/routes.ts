@@ -1,4 +1,3 @@
-import { url } from "zod"
 
 const ROUTES = {
   HOME: {
