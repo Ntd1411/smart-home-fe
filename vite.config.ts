@@ -25,21 +25,21 @@ export default defineConfig(({ mode }) => {
     },
 
     // cấu hình cho development server (vite dev)
-    // server: {
-    //   // bật CORS (cho phép trình duyệt truy vấn từ origin khác)
-    //   cors: true,
-    //   // thêm header này vào response dev server- cho phép mọi origin truy cập (chỉ nên dùng ở dev)
-    //   headers: {
-    //     'Access-Control-Allow-Origin': '*'
-    //   },
-    //   // cấu hình proxy để forward các request từ dev server tới backend
-    //   proxy: {
-    //     '/api': {
-    //       target: env.VITE_API_URL,
-    //       // khi proxy request, header Host sẽ thay đổi thành host của target. Thường cần khi server đích kiểm tra host
-    //       changeOrigin: true
-    //     }
-    //   }
-    // }
+    server: {
+      // bật CORS (cho phép trình duyệt truy vấn từ origin khác)
+      cors: true,
+      // thêm header này vào response dev server- cho phép mọi origin truy cập (chỉ nên dùng ở dev)
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      },
+      // cấu hình proxy để forward các request từ dev server tới backend
+      proxy: {
+        '/api': {
+          target: env.VITE_API_URL,
+          // khi proxy request, header Host sẽ thay đổi thành host của target. Thường cần khi server đích kiểm tra host
+          changeOrigin: true
+        }
+      }
+    }
   }
 })
