@@ -33,7 +33,7 @@ const LoadingSpinner = ({ isLoading, className }: LoadingSpinnerProps) => {
           isHiding ? 'scale-0 rotate-180' : 'scale-100 rotate-0'
         )}
       >
-        <img src='/logo.webp' alt='Loading...' className='w-20 h-20 object-contain animate-pulse' />
+        <img src='./smarthome.jpg' alt='Loading...' className='w-20 h-20 object-contain animate-pulse' />
         <div className='absolute inset-0 rounded-full bg-primary/20 animate-ping' />
       </div>
     </div>
