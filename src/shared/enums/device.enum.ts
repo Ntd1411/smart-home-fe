@@ -1,6 +1,7 @@
 export const DeviceType = {
   LIGHT: 'light',
   DOOR: 'door',
+  WINDOW: 'window',
   TEMP_HUMID_SENSOR: 'temp_humid_sensor',
   GAS_SENSOR: 'gas_sensor',
   LIGHT_SENSOR: 'light_sensor',

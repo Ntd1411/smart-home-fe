@@ -7,7 +7,7 @@ import { withPermissionGuard } from "@/shared/components/WithPermissionGuard";
 import { ComponentWithPermissionGuard } from "@/shared/components/ComponentWithPermissionGuard";
 import { PERMISSIONS } from "@/shared/constants/permissions";
 
-const SettingPageComponent = () => {
+const GeneralSettingPageComponent = () => {
   const { data, isLoading } = useGetSettings();
   const [temperatureRange, setTemperatureRange] = useState<[number, number]>([
     30, 70,
@@ -87,7 +87,7 @@ const SettingPageComponent = () => {
   );
 };
 
-export const SettingPage = withPermissionGuard(
-  SettingPageComponent,
+export const GeneralSettingPage = withPermissionGuard(
+  GeneralSettingPageComponent,
   PERMISSIONS.SETTING
 );

@@ -19,7 +19,7 @@ import { UserCreatePage } from "./features/users/page/UserCreatePage";
 import { RoleCreatePage } from "./features/roles/pages/RoleCreatePage";
 import { OverviewPage } from "./features/overview/pages/OverviewPage";
 import { RoomDetailPage } from "./features/rooms/pages/RoomDetailPage";
-import { SettingPage } from "./features/setting/pages/SettingPage";
+import { GeneralSettingPage } from "./features/setting/pages/GeneralSettingPage";
 import { PermissionsPage } from "./features/permissions/pages/PermissionsPage";
 import ProfilePage from "./features/auth/pages/ProfilePage";
 
@@ -82,8 +82,8 @@ const router = createBrowserRouter([
             element: <RoomDetailPage />
           },
           {
-            path: ROUTES.SETTING.url,
-            element: <SettingPage />          
+            path: ROUTES.GENERAL_SETTING.url,
+            element: <GeneralSettingPage />          
           },
           {
             path: ROUTES.PROFILE.url,

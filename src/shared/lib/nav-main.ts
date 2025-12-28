@@ -1,4 +1,4 @@
-import { Users, CircleGauge, House, Settings } from "lucide-react";
+import { Users, CircleGauge, House, Settings, Bell } from "lucide-react";
 import { PERMISSIONS } from "../constants/permissions";
 import ROUTES from "./routes";
 
@@ -68,27 +68,46 @@ const navMain: NavItem[] = [
       {
         title: ROUTES.LIVING_ROOM.title,
         url: ROUTES.LIVING_ROOM.url,
-        requiredPermission: PERMISSIONS.ROOMS.LIVING_ROOM.DETAILS
+        requiredPermission: PERMISSIONS.ROOMS.LIVING_ROOM.DETAILS,
       },
       {
         title: ROUTES.KITCHEN.title,
         url: ROUTES.KITCHEN.url,
-        requiredPermission: PERMISSIONS.ROOMS.KITCHEN.DETAILS
+        requiredPermission: PERMISSIONS.ROOMS.KITCHEN.DETAILS,
       },
       {
         title: ROUTES.BED_ROOM.title,
         url: ROUTES.BED_ROOM.url,
-        requiredPermission: PERMISSIONS.ROOMS.BEDROOM.DETAILS
+        requiredPermission: PERMISSIONS.ROOMS.BEDROOM.DETAILS,
       },
     ],
   },
   {
-    title: ROUTES.SETTING.title,
-    url: ROUTES.SETTING.url,
+    title: "Cài đặt",
+    url: "#",
     icon: Settings,
     isActive: true,
-    requiredPermission: PERMISSIONS.SETTING,
+    items: [
+      {
+        title: ROUTES.GENERAL_SETTING.title,
+        url: ROUTES.GENERAL_SETTING.url,
+        requiredPermission: PERMISSIONS.SETTING,
+      },
+      {
+        title: ROUTES.HOUSE_INFORMATION.title,
+        url: ROUTES.HOUSE_INFORMATION.url,
+        requiredPermission: PERMISSIONS.SETTING,
+      },
+      
+    ],
   },
+  {
+    title: ROUTES.NOTIFICATION.title,
+    url: ROUTES.NOTIFICATION.url,
+    icon: Bell,
+    isActive: true,
+    requiredPermission: PERMISSIONS.NOTIFICATIONS.LIST,
+  }
 ];
 
 export default navMain;

@@ -13,7 +13,7 @@ export const useRoomDetail = (location: string | undefined) => {
     if (!socket || !location) return;
 
     const handleSensorAndDeviceData = (data: Partial<RoomDetail>) => {
-      console.log(data);
+      console.log("handleSensorAndDeviceData", data);
       queryClient.setQueryData<RoomDetail>(
         ["room-detail", location],
         (oldData) => {

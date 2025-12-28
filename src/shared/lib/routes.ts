@@ -73,9 +73,17 @@ const ROUTES = {
     title: 'Phòng ngủ',
     url: '/rooms/bedroom',
   },
-  SETTING: {
-    title: "Cài đặt",
-    url: '/settings'
+  GENERAL_SETTING: {
+    title: "Cài đặt chung",
+    url: '/general-settings'
+  },
+  HOUSE_INFORMATION: {
+    title: "Thông tin ngôi nhà",
+    url: '/house-information'
+  },
+  NOTIFICATION: {
+    title: "Thông báo",
+    url: '/notifications'
   },
   PROFILE: {
     title: "Hồ sơ cá nhân",

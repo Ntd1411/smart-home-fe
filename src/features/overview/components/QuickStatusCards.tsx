@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/shared/components/ui/card";
-import { Lightbulb, Plug, DoorOpen } from "lucide-react";
+import { Lightbulb, Plug, DoorOpen, SquareStack } from "lucide-react";
 import { type QuickStatus } from "../api/OverviewService";
 
 interface QuickStatusCardsProps {
@@ -14,10 +14,12 @@ export const QuickStatusCards = ({ quickStatus }: QuickStatusCardsProps) => {
     devicesTotal,
     doorsOpen,
     doorsTotal,
+    windowsOpen,
+    windowsTotal,
   } = quickStatus;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {/* Đèn đang bật */}
       <Card>
         <CardContent className="pt-6">
@@ -60,6 +62,21 @@ export const QuickStatusCards = ({ quickStatus }: QuickStatusCardsProps) => {
             <div>
               <p className="text-sm text-muted-foreground">Cửa đang mở</p>
               <p className="text-2xl font-bold">{doorsOpen} / {doorsTotal}</p>  
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Cửa sổ đang mở */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex items-center gap-3">
+            <div className="p-3 rounded-lg bg-purple-100 dark:bg-purple-900/20">
+              <SquareStack className="w-6 h-6 text-purple-600 dark:text-purple-500" />
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Cửa sổ đang mở</p>
+              <p className="text-2xl font-bold">{windowsOpen} / {windowsTotal}</p>  
             </div>
           </div>
         </CardContent>

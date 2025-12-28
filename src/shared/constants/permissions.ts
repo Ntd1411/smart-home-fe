@@ -1,5 +1,6 @@
 import type { PermissionRequirement } from "@/shared/lib/utils";
 
+
 // Permission constants cho các actions trong hệ thống
 export const PERMISSIONS = {
   // Users
@@ -47,7 +48,10 @@ export const PERMISSIONS = {
       method: "PATCH",
       path: "/overview/doors",
     } as PermissionRequirement,
-
+    WINDOWS: {
+      method: "PATCH",
+      path: "/overview/windows",
+    } as PermissionRequirement,
   },
 
   // Setting
@@ -56,52 +60,87 @@ export const PERMISSIONS = {
     path: "/settings",
   } as PermissionRequirement,
 
+  // Notification
+  NOTIFICATIONS: {
+    LIST: {
+      method: "GET", 
+    } as PermissionRequirement,
+  },
+
   // Room
   ROOMS: {
     LIVING_ROOM: {
-      LIGHT: {
+      EACH_LIGHT: {
         method: "PATCH",
-        path: "/living-room/light",
+        path: "/living-room/light/:deviceId",
       } as PermissionRequirement,
-      DOOR: {
+      EACH_DOOR: {
         method: "PATCH",
-        path: "/living-room/door",
+        path: "/living-room/door/:deviceId",
       } as PermissionRequirement,
       DETAILS: {
         method: "GET",
         path: "/living-room/details",
       } as PermissionRequirement,
+      ALL_LIGHTS: {
+        method: "PATCH",
+        path: "/living-room/lights/control-all",
+      } as PermissionRequirement,
+      ALL_DOORS: {
+        method: "PATCH",
+        path: "/living-room/doors/control-all",
+      } as PermissionRequirement,
       DOOR_PASSWORD: {
         method: "PATCH",
-        path: "/living-room/door/change-password",
+        path: "/living-room/door/:deviceId/change-password",
       } as PermissionRequirement,
     },
     BEDROOM: {
-      LIGHT: {
+      EACH_LIGHT: {
         method: "PATCH",
-        path: "/bedroom/light",
+        path: "/bedroom/light/:deviceId",
       } as PermissionRequirement,
-      DOOR: {
+      EACH_DOOR: {
         method: "PATCH",
-        path: "/bedroom/door",
+        path: "/bedroom/door/:deviceId",
       } as PermissionRequirement,
       DETAILS: {
         method: "GET",
         path: "/bedroom/details",
       } as PermissionRequirement,
+      ALL_LIGHTS: {
+        method: "PATCH",
+        path: "/bedroom/lights/control-all",
+      } as PermissionRequirement,
+      ALL_DOORS: {
+        method: "PATCH",
+        path: "/bedroom/doors/control-all",
+      } as PermissionRequirement,
       DOOR_PASSWORD: {
         method: "PATCH",
-        path: "/bedroom/door/change-password",
+        path: "/bedroom/door/:deviceId/change-password",
       } as PermissionRequirement,
     },
     KITCHEN: {
-      LIGHT: {
+      EACH_LIGHT: {
         method: "PATCH",
-        path: "/kitchen/light",
+        path: "/kitchen/light/:deviceId",
       } as PermissionRequirement,
-      DOOR: {
+      EACH_WINDOW: {
         method: "PATCH",
-        path: "/kitchen/door",
+        path: "/kitchen/window/:deviceId",
+      } as PermissionRequirement,
+      ALL_LIGHTS: {
+        method: "PATCH",
+        path: "/kitchen/lights/control-all",
+      } as PermissionRequirement,
+      ALL_WINDOWS: {
+        method: "PATCH",
+        path: "/kitchen/windows",
+      } as PermissionRequirement,
+      AUTO_MODE: {
+        method: "PATCH",
+        path: "/kitchen/auto",
       } as PermissionRequirement,
       DETAILS: {
         method: "GET",

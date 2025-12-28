@@ -13,6 +13,8 @@ export interface QuickStatus {
   devicesTotal: number;
   doorsOpen: number;
   doorsTotal: number;
+  windowsOpen: number;
+  windowsTotal: number;
 }
 
 export interface Room {
@@ -85,6 +87,23 @@ export const useLockAllDoorsMutation = () => {
     },
     onError: (error: any) => {
       toast.error(error?.message || "Không thể cập nhật trạng thái cửa");
+    },
+  });
+};
+
+export const useToggleAllWindowsMutation = () => {
+  return useMutation({
+    // state: true => mở tất cả cửa sổ, false => đóng tất cả cửa sổ
+    mutationFn: async (open: boolean) => {
+      await api.patch(`/v1/overview/windows`, { state: open });
+      return { success: true };
+    },
+    onSuccess: async (_data, open) => {
+      await queryClient.invalidateQueries({ queryKey: ["overview"] });
+      toast.success(open ? "Đã mở tất cả cửa sổ" : "Đã đóng tất cả cửa sổ");
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || "Không thể cập nhật trạng thái cửa sổ");
     },
   });
 };

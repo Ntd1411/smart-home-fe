@@ -39,8 +39,8 @@ const getRoomName = (location: string) => {
 
 const ROOM_PERMISSION_GROUP = {
   "living-room": PERMISSIONS.ROOMS.LIVING_ROOM,
-  bedroom: PERMISSIONS.ROOMS.BEDROOM,
-  kitchen: PERMISSIONS.ROOMS.KITCHEN,
+  "bedroom": PERMISSIONS.ROOMS.BEDROOM,
+  "kitchen": PERMISSIONS.ROOMS.KITCHEN,
 } as const;
 
 export const RoomDetailPage = () => {
@@ -65,6 +65,8 @@ export const RoomDetailPage = () => {
       </div>
     );
   }
+
+  console.log("roomPermissions", permissions);
 
   const hasAccess = hasPermission(permissions, roomPermissions.DETAILS);
 
