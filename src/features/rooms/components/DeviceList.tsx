@@ -18,6 +18,7 @@ import {
   LightbulbOff,
   SquareStack,
   Bot,
+  Pencil,
 } from "lucide-react";
 import {
   useControlSpecificLight,
@@ -28,12 +29,14 @@ import {
   useControlAllWindows,
   useCommandAuto,
   useChangeDoorPassword,
+  useUpdateDeviceName,
   type RoomDevice,
 } from "../api/RoomService";
 import { DeviceType } from "@/shared/enums/device.enum";
 import { Button } from "@/shared/components/ui/button";
 import { ComponentWithPermissionGuard } from "@/shared/components/ComponentWithPermissionGuard";
 import { ChangeDoorPasswordDialog } from "./ChangeDoorPasswordDialog";
+import { EditDeviceNameDialog } from "./EditDeviceNameDialog";
 
 interface DeviceListProps {
   devices: RoomDevice[];
@@ -55,9 +58,14 @@ export const DeviceList = ({ devices, room, permission }: DeviceListProps) => {
     useCommandAuto(room);
   const { mutateAsync: changeDoorPassword, isPending: isChangingPassword } =
     useChangeDoorPassword(room);
+  const { mutateAsync: updateDeviceName, isPending: isUpdatingName } =
+    useUpdateDeviceName(room);
 
   const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
+  const [editNameDialogOpen, setEditNameDialogOpen] = useState(false);
   const [selectedDoorId, setSelectedDoorId] = useState<string>("");
+  const [selectedDeviceId, setSelectedDeviceId] = useState<string>("");
+  const [selectedDeviceName, setSelectedDeviceName] = useState<string>("");
   const [controllingLightId, setControllingLightId] = useState<string | null>(
     null
   );
@@ -168,6 +176,17 @@ export const DeviceList = ({ devices, room, permission }: DeviceListProps) => {
   const openPasswordDialog = (doorId: string) => {
     setSelectedDoorId(doorId);
     setPasswordDialogOpen(true);
+  };
+
+  const openEditNameDialog = (deviceId: string, currentName: string) => {
+    setSelectedDeviceId(deviceId);
+    setSelectedDeviceName(currentName);
+    setEditNameDialogOpen(true);
+  };
+
+  const handleUpdateDeviceName = async (deviceId: string, newName: string) => {
+    await updateDeviceName({ deviceId, name: newName });
+    setEditNameDialogOpen(false);
   };
 
   if (devicesList.length === 0) {
@@ -287,8 +306,18 @@ export const DeviceList = ({ devices, room, permission }: DeviceListProps) => {
                     <XCircle className="w-4 h-4 text-gray-400" />
                   )}
                 </div>
-                <div>
-                  <p className="font-medium">{device.name}</p>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <p className="font-medium">{device.name}</p>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="h-6 w-6 p-0"
+                      onClick={() => openEditNameDialog(device.id, device.name)}
+                    >
+                      <Pencil className="w-3 h-3" />
+                    </Button>
+                  </div>
                   <p className="text-sm text-muted-foreground">
                     {device.type === DeviceType.LIGHT
                       ? "Đèn"
@@ -420,6 +449,14 @@ export const DeviceList = ({ devices, room, permission }: DeviceListProps) => {
         onOpenChange={setPasswordDialogOpen}
         onSubmit={handleChangePassword}
         isLoading={isChangingPassword}
+      />
+      <EditDeviceNameDialog
+        open={editNameDialogOpen}
+        onOpenChange={setEditNameDialogOpen}
+        deviceId={selectedDeviceId}
+        currentName={selectedDeviceName}
+        onSubmit={handleUpdateDeviceName}
+        isLoading={isUpdatingName}
       />
     </Card>
   );

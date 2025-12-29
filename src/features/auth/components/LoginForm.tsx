@@ -27,7 +27,7 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
   const { mutateAsync: loginMutation, isPending } = useLoginMutation()
 
   // cơ chế redirect sau khi đăng nhập thành công.
-  const from = location.state?.from || '/'
+  const from = location.state?.from || '/overview'
 
   // tạo một react hook form.
   // kết nối với schema Zod (LoginSchema) để tự động validate

@@ -81,7 +81,7 @@ const UserPageComponent = () => {
                 <td className="p-2 border">{user.fullName}</td>
                 <td className="p-2 border text-center">
                   {user.gender === "MALE" ? "Nam" : "Nữ"}
-                </td>{" "}
+                </td>
                 <td className="p-2 border">{user.email || "-"}</td>
                 <td className="p-2 border">{user.phone || "-"}</td>
                 <td className="p-2 border">

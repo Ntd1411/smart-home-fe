@@ -337,3 +337,20 @@ export const useCommandAuto = (room: string) => {
     },
   });
 };
+
+// Update device name
+export const useUpdateDeviceName = (room: string) => {
+  return useMutation({
+    mutationFn: async ({ deviceId, name }: { deviceId: string; name: string }) => {
+      const res = await api.patch(`/v1/${room}/device/${deviceId}/name`, { name });
+      return res.data;
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["room-detail", room] });
+      toast.success("Đã cập nhật tên thiết bị thành công");
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || error?.message || "Không thể cập nhật tên thiết bị");
+    },
+  });
+};

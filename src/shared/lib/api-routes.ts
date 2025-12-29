@@ -11,6 +11,7 @@ const API_ROUTES = {
   PERMISSIONS: '/v1/permissions',
   ROLES: '/v1/roles',
   AUDIT_LOGS: '/v1/audit-logs',
+  NOTIFICATIONS: '/v1/notifications',
 }
 
 export default API_ROUTES

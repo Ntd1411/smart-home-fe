@@ -22,6 +22,7 @@ import { RoomDetailPage } from "./features/rooms/pages/RoomDetailPage";
 import { GeneralSettingPage } from "./features/setting/pages/GeneralSettingPage";
 import { PermissionsPage } from "./features/permissions/pages/PermissionsPage";
 import ProfilePage from "./features/auth/pages/ProfilePage";
+import { NotificationPage } from "./features/notifications/page/NotificationPage";
 
 const router = createBrowserRouter([
   {
@@ -84,6 +85,10 @@ const router = createBrowserRouter([
           {
             path: ROUTES.GENERAL_SETTING.url,
             element: <GeneralSettingPage />          
+          },
+          {
+            path: ROUTES.NOTIFICATION.url,
+            element: <NotificationPage />
           },
           {
             path: ROUTES.PROFILE.url,

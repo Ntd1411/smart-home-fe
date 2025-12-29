@@ -45,3 +45,56 @@ export const useGetSettings = () => {
     },
   });
 };
+
+export type SecuritySettingValueType = "string" | "number" | "boolean" | "json";
+
+export interface SecuritySettingDto {
+  settingKey: string;
+  settingValue: string;
+  description?: string;
+  valueType: SecuritySettingValueType;
+}
+
+export interface SaveSecuritySettingsPayload {
+  maxDoorPasswordAttempts: number;
+  passwordAttemptResetTimeMinutes: number;
+}
+
+export const useGetSecuritySettings = () => {
+  return useQuery({
+    queryKey: ["security-settings"],
+    queryFn: async (): Promise<SecuritySettingDto[]> => {
+      const { data } = await api.get("/v1/settings/security");
+      return data;
+    },
+  });
+};
+
+export const useSaveSecuritySettings = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: SaveSecuritySettingsPayload) => {
+      await Promise.all([
+        api.patch(`/v1/settings/security/max_door_password_attempts`, {
+          value: String(payload.maxDoorPasswordAttempts),
+          valueType: "number" as const,
+        }),
+        api.patch(`/v1/settings/security/password_attempt_reset_time_minutes`, {
+          value: String(payload.passwordAttemptResetTimeMinutes),
+          valueType: "number" as const,
+        }),
+      ]);
+
+      return { success: true };
+    },
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: ["security-settings"] });
+      toast.success("Đã lưu cài đặt bảo mật thành công!");
+    },
+    onError: (error: any) => {
+      console.error(error);
+      toast.error("Lưu cài đặt bảo mật thất bại!");
+    },
+  });
+};
