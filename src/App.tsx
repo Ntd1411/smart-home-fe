@@ -23,6 +23,7 @@ import { GeneralSettingPage } from "./features/setting/pages/GeneralSettingPage"
 import { PermissionsPage } from "./features/permissions/pages/PermissionsPage";
 import ProfilePage from "./features/auth/pages/ProfilePage";
 import { NotificationPage } from "./features/notifications/page/NotificationPage";
+import { AuditLogsPage } from "./features/audit-logs/pages/AuditLogsPage";
 
 const router = createBrowserRouter([
   {
@@ -74,6 +75,10 @@ const router = createBrowserRouter([
           //   path: ROUTES.AUDIT_LOGS.url,
           //   element: <AuditLogsPage />
           // },
+          {
+            path: ROUTES.AUDIT_LOGS.url,
+            element: <AuditLogsPage />
+          },
           {
             path: ROUTES.OVERVIEW.url,
             element: <OverviewPage />
