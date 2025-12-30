@@ -62,7 +62,7 @@ const useAuthStore = create<AuthState>()(
           // truyền accessToken vào socket để xác thực
           const { connect } = useSocketStore.getState()
           // const { connect: connectSmartHome } = useSmartHomeSocketStore.getState() // Tạm thời tắt
-          connect()
+          connect(token.accessToken)
           // connectSmartHome(token.accessToken) // Tạm thời tắt Socket.IO
         },
         logout: () => {

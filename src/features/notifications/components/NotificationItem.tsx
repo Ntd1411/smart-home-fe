@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { Bell, CheckCheck, Mail, Trash2, AlertTriangle, Info, Shield, ChevronDown } from "lucide-react";
+import { Bell, CheckCheck, Mail, Trash2, Info, Shield, ChevronDown, WifiOff, ThermometerSun } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { NotificationSeverity, NotificationType } from "@/shared/enums/notification.enum";
 import type { Notification } from "../api/NotificationService";
@@ -38,6 +38,14 @@ export const NotificationItem = ({ notification, onMarkAsRead, onDelete }: Notif
       deviceId: 'Thiết bị',
       location: 'Vị trí',
       ipAddress: 'Địa chỉ IP',
+      roomStatus: 'Trạng thái phòng',
+      occurredAt: 'Thời gian xảy ra',
+      temperature: 'Nhiệt độ (°C)',
+      humidity: 'Độ ẩm (%)',
+      gas: 'Gas',
+      gasWarningMessage: 'Cảnh báo gas',
+      temperatureWarningMessage: 'Cảnh báo nhiệt độ',
+      humidityWarningMessage: 'Cảnh báo độ ẩm',
     };
 
     return keyMap[key] || key.charAt(0).toUpperCase() + key.slice(1);
@@ -92,8 +100,8 @@ export const NotificationItem = ({ notification, onMarkAsRead, onDelete }: Notif
   const getSeverityIcon = (type: NotificationType) => {
     switch (type) {
       case NotificationType.SECURITY_ALERT: return <Shield className="w-5 h-5" />;
-      case NotificationType.SENSOR_WARNING: return <AlertTriangle className="w-5 h-5" />;
-      case NotificationType.DEVICE_OFFLINE: return <AlertTriangle className="w-5 h-5" />;
+      case NotificationType.SENSOR_WARNING: return <ThermometerSun className="w-5 h-5" />;
+      case NotificationType.DEVICE_OFFLINE: return <WifiOff className="w-5 h-5" />;
       case NotificationType.SYSTEM_INFO: return <Info className="w-5 h-5" />;
       default: return <Bell className="w-5 h-5" />;
     }

@@ -77,9 +77,9 @@ const ROUTES = {
     title: "Cài đặt chung",
     url: '/general-settings'
   },
-  HOUSE_INFORMATION: {
-    title: "Thông tin ngôi nhà",
-    url: '/house-information'
+  NOTIFICATION_SETTING: {
+    title: "Cài đặt thông báo",
+    url: '/notification-settings'
   },
   NOTIFICATION: {
     title: "Thông báo",

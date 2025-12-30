@@ -8,6 +8,7 @@ import ROUTES from "@/shared/lib/routes";
 import { withPermissionGuard } from "@/shared/components/WithPermissionGuard";
 import { PERMISSIONS } from "@/shared/constants/permissions";
 import { ComponentWithPermissionGuard } from "@/shared/components/ComponentWithPermissionGuard";
+import { FormPageLayout } from "@/shared/components/FormPageLayout";
 
 const UserPageComponent = () => {
   const navigate = useNavigate();
@@ -36,26 +37,41 @@ const UserPageComponent = () => {
 
   if (isLoading || isFetching) {
     return (
-      <div className="flex items-center justify-center h-40">
-        <Loader2 className="animate-spin w-6 h-6" />
-      </div>
+      <FormPageLayout
+        title="Quản lý người dùng"
+        description="Danh sách tất cả người dùng trong hệ thống"
+      >
+        <div className="flex items-center justify-center h-40">
+          <Loader2 className="animate-spin w-6 h-6" />
+        </div>
+      </FormPageLayout>
     );
   }
 
   if (!users.length) {
-    return <p className="text-center text-gray-500">Không có user nào.</p>;
+    return (
+      <FormPageLayout
+        title="Quản lý người dùng"
+        description="Danh sách tất cả người dùng trong hệ thống"
+      >
+        <p className="text-center text-gray-500">Không có user nào.</p>
+      </FormPageLayout>
+    );
   }
 
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-semibold">Danh sách người dùng</h1>
-        <ComponentWithPermissionGuard permission={PERMISSIONS.USERS.CREATE}>
-          <Button onClick={() => navigate(ROUTES.USER_CREATE.url)}>
-            <Plus className="w-4 h-4 mr-2" /> Thêm người dùng
-          </Button>
-        </ComponentWithPermissionGuard>
-      </div>
+    <FormPageLayout
+      title="Quản lý người dùng"
+      description="Danh sách tất cả người dùng trong hệ thống"
+    >
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-4">
+          <ComponentWithPermissionGuard permission={PERMISSIONS.USERS.CREATE}>
+            <Button onClick={() => navigate(ROUTES.USER_CREATE.url)}>
+              <Plus className="w-4 h-4 mr-2" /> Thêm người dùng
+            </Button>
+          </ComponentWithPermissionGuard>
+        </div>
 
       <div className="overflow-x-auto">
         <table className="w-full border border-gray-200 rounded-lg text-center">
@@ -144,7 +160,8 @@ const UserPageComponent = () => {
           </tbody>
         </table>
       </div>
-    </div>
+      </div>
+    </FormPageLayout>
   );
 };
 
