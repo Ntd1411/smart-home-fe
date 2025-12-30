@@ -12,12 +12,24 @@ import { toast } from 'sonner'
 import { create } from 'zustand'
 import envConfig from '../config/envConfig'
 
+const getAccessTokenFromAuthStorage = (): string | null => {
+  try {
+    const raw = localStorage.getItem('auth-storage')
+    if (!raw) return null
+
+    const parsed = JSON.parse(raw) as { state?: { token?: { accessToken?: string } } }
+    return parsed?.state?.token?.accessToken ?? null
+  } catch {
+    return null
+  }
+}
+
 interface SocketState {
   socket: Socket | null  // instance socket hiện tại
   isConnected: boolean
   isConnecting: boolean  // đang trong qtr kết nối (để tránh gọi nhiều lần).
   error: string | null
-  connect: () => void  // connect, disconnect, setter thủ công
+  connect: (token?: string) => void  // connect, disconnect, setter thủ công
   disconnect: () => void
   setConnected: (connected: boolean) => void
   setError: (error: string | null) => void
@@ -33,7 +45,7 @@ export const useSocketStore = create<SocketState>()((set, get) => ({
   isConnecting: false,
   error: null,
 
-  connect: () => {
+  connect: (token?: string) => {
     const { socket, isConnected } = get()
 
     // nếu đã kết nối rồi -> không làm gì
@@ -50,11 +62,21 @@ export const useSocketStore = create<SocketState>()((set, get) => ({
     set({ isConnecting: true, error: null })
 
     try {
+      const accessToken = token ?? getAccessTokenFromAuthStorage()
+
+      if (!accessToken) {
+        toast.error('Thiếu token để kết nối socket!', {
+          description: 'Vui lòng đăng nhập lại để tiếp tục sử dụng realtime.'
+        })
+        set({ isConnecting: false, error: 'Thiếu token để kết nối socket!' })
+        return
+      }
+
       // tạo socket instance
       const newSocket = io(`${envConfig.VITE_SOCKET_URL}`, {
-        // auth: { token }, // Gửi token để server xác thực
-        // path: '/ws/socket.io', // Đường dẫn socket (thường dùng khi có reverse proxy)
-        // transports: ['websocket'], // chỉ dùng websocket (không fallback polling)
+        auth: { token: accessToken }, // Gửi accessToken để server xác thực
+        path: '/ws/socket.io', // Đường dẫn socket (thường dùng khi có reverse proxy)
+        transports: ['websocket'], // chỉ dùng websocket (không fallback polling)
         autoConnect: true,
         reconnection: true,
         reconnectionAttempts: 5,
@@ -85,7 +107,20 @@ export const useSocketStore = create<SocketState>()((set, get) => ({
 
 
       // lỗi kết nối
-      newSocket.on('connect_error', () => {
+      newSocket.on('connect_error', (err: any) => {
+        // Backend rejects handshake with Error('auth_error') when JWT is missing/invalid.
+        if (err?.message === 'auth_error') {
+          toast.error('Lỗi xác thực khi kết nối socket!', {
+            description: 'Vui lòng kiểm tra lại thông tin đăng nhập và thử đăng nhập lại.'
+          })
+          set({
+            isConnected: false,
+            isConnecting: false,
+            error: 'Lỗi xác thực khi kết nối socket!'
+          })
+          return
+        }
+
         toast.error('Lỗi kết nối socket!', {
           description: 'Vui lòng kiểm tra lại kết nối internet và thử đăng nhập lại.'
         })
@@ -94,19 +129,6 @@ export const useSocketStore = create<SocketState>()((set, get) => ({
           isConnecting: false,
           error: 'Lỗi kết nối socket!'
         })
-      })
-
-      // rất quan trong: 
-      newSocket.on('auth_error', () => {
-        toast.error('Lỗi xác thực khi kết nối socket!', {
-          description: 'Vui lòng kiểm tra lại thông tin đăng nhập và thử đăng nhập lại.'
-        })
-        set({
-          isConnected: false,
-          isConnecting: false,
-          error: 'Lỗi xác thực khi kết nối socket!'
-        })
-        newSocket.disconnect() // ngắt luôn, không thử lại
       })
 
       set({ socket: newSocket })
