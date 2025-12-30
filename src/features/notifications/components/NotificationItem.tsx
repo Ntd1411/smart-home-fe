@@ -161,7 +161,7 @@ export const NotificationItem = ({ notification, onMarkAsRead, onDelete }: Notif
                   {Object.entries(notification.metadata!).map(([key, value]) => (
                     <p key={key} className="wrap-break-word">
                       <span className="font-medium text-gray-700">{formatKey(key)}:</span>{' '}
-                      <span className="text-gray-700">{formatValue(value)}</span>
+                      <span className="text-gray-700">{formatValue(value) || "Không có"}</span>
                     </p>
                   ))}
                 </div>

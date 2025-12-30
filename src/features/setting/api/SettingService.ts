@@ -119,8 +119,13 @@ export const useSaveHomeInfoSettings = () => {
       return { success: true };
     },
     onSuccess: async () => {
-      queryClient.invalidateQueries({ queryKey: ["security-settings"] });
-      queryClient.invalidateQueries({ queryKey: ["home-info"] });
+      await queryClient.invalidateQueries({ queryKey: ["security-settings"] });
+      await queryClient.invalidateQueries({ queryKey: ["home-info"] });
+
+      // Global config sets refetchOnMount=false, so if the user updates home info on
+      // Settings page and later navigates back to Overview, the query won't auto refetch.
+      // Refetch here to ensure cache is updated immediately (even if currently inactive).
+      await queryClient.refetchQueries({ queryKey: ["home-info"], type: 'all' });
       toast.success("Đã lưu thông tin nhà thành công!");
     },
     onError: (error: any) => {
