@@ -54,6 +54,12 @@ export const PERMISSIONS = {
     } as PermissionRequirement,
   },
 
+  // Audit Logs
+  AUDIT_LOGS: {
+    LIST: { method: 'GET', path: '/audit-log' } as PermissionRequirement,
+    VIEW: { method: 'GET', path: '/audit-log/:id' } as PermissionRequirement,
+  },
+
   // Setting
   SETTING: {
     method: "GET",

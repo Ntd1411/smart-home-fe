@@ -10,7 +10,7 @@ const API_ROUTES = {
   USERS: '/v1/users',
   PERMISSIONS: '/v1/permissions',
   ROLES: '/v1/roles',
-  AUDIT_LOGS: '/v1/audit-logs',
+  AUDIT_LOGS: '/v1/audit-log',
   NOTIFICATIONS: '/v1/notifications',
 }
 
