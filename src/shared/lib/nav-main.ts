@@ -1,4 +1,4 @@
-import { Users, CircleGauge, House, Settings, Bell } from "lucide-react";
+import { Users, CircleGauge, House, Settings, Bell} from "lucide-react";
 import { PERMISSIONS } from "../constants/permissions";
 import ROUTES from "./routes";
 
@@ -94,8 +94,8 @@ const navMain: NavItem[] = [
         requiredPermission: PERMISSIONS.SETTING,
       },
       {
-        title: ROUTES.HOUSE_INFORMATION.title,
-        url: ROUTES.HOUSE_INFORMATION.url,
+        title: ROUTES.NOTIFICATION_SETTING.title,
+        url: ROUTES.NOTIFICATION_SETTING.url,
         requiredPermission: PERMISSIONS.SETTING,
       },
       
@@ -107,7 +107,7 @@ const navMain: NavItem[] = [
     icon: Bell,
     isActive: true,
     requiredPermission: PERMISSIONS.NOTIFICATIONS.LIST,
-  }
+  },
 ];
 
 export default navMain;

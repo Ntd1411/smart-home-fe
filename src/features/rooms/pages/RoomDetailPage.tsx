@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router";
+import { useParams } from "react-router";
 import { useGetRoomDetailQuery } from "../api/RoomService";
 import {
   Card,
@@ -8,7 +8,6 @@ import {
 } from "@/shared/components/ui/card";
 import { Button } from "@/shared/components/ui/button";
 import {
-  ArrowLeft,
   Loader2,
   RefreshCw,
   Thermometer,
@@ -22,12 +21,12 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { DeviceList } from "../components/DeviceList";
-import ROUTES from "@/shared/lib/routes";
 import { useRoomDetail } from "../hooks/useGetRoomDetail";
 import { hasPermission } from "@/shared/lib/utils";
 import { useMeQuery } from "@/features/auth/api/AuthService";
 import LoadingSpinner from "@/shared/components/LoadingSpinner";
 import { PERMISSIONS } from "@/shared/constants/permissions";
+import { FormPageLayout } from "@/shared/components/FormPageLayout";
 
 const getRoomName = (location: string) => {
   if (location === "living-room") return "Phòng khách";
@@ -60,89 +59,92 @@ export const RoomDetailPage = () => {
   // Loading state
   if (isLoadingMe || isPendingMe) {
     return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <LoadingSpinner isLoading={true} className="py-20" />
-      </div>
+      <FormPageLayout
+        title={getRoomName(location || "")}
+        description="Chi tiết phòng và thiết bị"
+      >
+        <div className="flex justify-center items-center min-h-[400px]">
+          <LoadingSpinner isLoading={true} className="py-20" />
+        </div>
+      </FormPageLayout>
     );
   }
-
-  console.log("roomPermissions", permissions);
 
   const hasAccess = hasPermission(permissions, roomPermissions.DETAILS);
 
   if (!hasAccess) {
     return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <div className="text-center space-y-4 max-w-md">
-          <div className="mx-auto w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center">
-            <AlertCircle className="h-8 w-8 text-destructive" />
-          </div>
-          <div>
-            <h2 className="text-xl font-semibold">Không có quyền truy cập</h2>
-            <p className="text-muted-foreground mt-2">
-              Bạn không có quyền truy cập tài nguyên này. Vui lòng liên hệ quản
-              trị viên để được cấp quyền.
-            </p>
+      <FormPageLayout
+        title={getRoomName(location || "")}
+        description="Chi tiết phòng và thiết bị"
+      >
+        <div className="flex justify-center items-center min-h-[400px]">
+          <div className="text-center space-y-4 max-w-md">
+            <div className="mx-auto w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center">
+              <AlertCircle className="h-8 w-8 text-destructive" />
+            </div>
+            <div>
+              <h2 className="text-xl font-semibold">Không có quyền truy cập</h2>
+              <p className="text-muted-foreground mt-2">
+                Bạn không có quyền truy cập tài nguyên này. Vui lòng liên hệ quản
+                trị viên để được cấp quyền.
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      </FormPageLayout>
     );
   }
 
   useRoomDetail(location);
-  const navigate = useNavigate();
   const { data, isLoading, isFetching, refetch } = useGetRoomDetailQuery(
     location || ""
   );
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-40">
-        <Loader2 className="animate-spin w-6 h-6" />
-      </div>
+      <FormPageLayout
+        title={getRoomName(location || "")}
+        description="Chi tiết phòng và thiết bị"
+      >
+        <div className="flex items-center justify-center h-40">
+          <Loader2 className="animate-spin w-6 h-6" />
+        </div>
+      </FormPageLayout>
     );
   }
 
   if (!data) {
     return (
-      <div className="p-6">
-        <p className="text-center text-muted-foreground">
-          Không tìm thấy phòng
-        </p>
-      </div>
+      <FormPageLayout
+        title={getRoomName(location || "")}
+        description="Chi tiết phòng và thiết bị"
+      >
+        <div className="p-6">
+          <p className="text-center text-muted-foreground">Không tìm thấy phòng</p>
+        </div>
+      </FormPageLayout>
     );
   }
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+    <FormPageLayout
+      title={getRoomName(data.location)}
+      description={`Chi tiết phòng: ${data.location}`}
+    >
+      <div className="p-6 space-y-6">
+        <div className="flex justify-end">
           <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate(ROUTES.OVERVIEW.url)}
+            variant="outline"
+            size="sm"
+            onClick={() => refetch()}
+            disabled={isFetching}
+            className="flex items-center gap-2"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <RefreshCw className={`w-4 h-4 ${isFetching ? "animate-spin" : ""}`} />
+            Làm mới
           </Button>
-          <div>
-            <h1 className="text-2xl font-bold">{getRoomName(data.location)}</h1>
-            <p className="text-sm text-muted-foreground">{data.location}</p>
-          </div>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => refetch()}
-          disabled={isFetching}
-          className="flex items-center gap-2"
-        >
-          <RefreshCw
-            className={`w-4 h-4 ${isFetching ? "animate-spin" : ""}`}
-          />
-          Làm mới
-        </Button>
-      </div>
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
@@ -325,6 +327,7 @@ export const RoomDetailPage = () => {
 
       {/* Điều khiển thiết bị */}
       {/* <DeviceControl devices={data.devices} /> */}
-    </div>
+      </div>
+    </FormPageLayout>
   );
 };

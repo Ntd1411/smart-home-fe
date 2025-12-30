@@ -60,6 +60,16 @@ export interface SaveSecuritySettingsPayload {
   passwordAttemptResetTimeMinutes: number;
 }
 
+export interface SaveHomeInfoSettingsPayload {
+  homeName: string;
+  homeAddress: string;
+}
+
+export interface HomeInfoResponse {
+  homeName: string;
+  homeAddress: string;
+}
+
 export const useGetSecuritySettings = () => {
   return useQuery({
     queryKey: ["security-settings"],
@@ -95,6 +105,37 @@ export const useSaveSecuritySettings = () => {
     onError: (error: any) => {
       console.error(error);
       toast.error("Lưu cài đặt bảo mật thất bại!");
+    },
+  });
+};
+
+export const useSaveHomeInfoSettings = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: SaveHomeInfoSettingsPayload) => {
+      await api.patch(`/v1/settings/home-info`, payload);
+
+      return { success: true };
+    },
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: ["security-settings"] });
+      queryClient.invalidateQueries({ queryKey: ["home-info"] });
+      toast.success("Đã lưu thông tin nhà thành công!");
+    },
+    onError: (error: any) => {
+      console.error(error);
+      toast.error("Lưu thông tin nhà thất bại!");
+    },
+  });
+};
+
+export const useGetHomeInfoSettings = () => {
+  return useQuery({
+    queryKey: ["home-info"],
+    queryFn: async (): Promise<HomeInfoResponse> => {
+      const { data } = await api.get("/v1/settings/home-info");
+      return data;
     },
   });
 };
