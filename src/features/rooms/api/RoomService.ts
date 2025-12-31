@@ -46,41 +46,6 @@ export const useGetRoomDetailQuery = (location: string) => {
   });
 };
 
-// export const useTurnOffLight = (room: string) => {
-//   return useMutation({
-//     mutationFn: async ({ turnOn }: { turnOn: boolean }) => {
-//       await api.patch(`/v1/${room}/light`, { state: turnOn });
-//       return { success: true };
-//     },
-
-//     onSuccess: async () => {
-//       queryClient.setQueryData(
-//         ["room-detail", room],
-//         (old: RoomDetail | undefined) => {
-//           if (!old) return old;
-
-//           return {
-//             ...old,
-//             devices: old.devices.map((item) =>
-//               item.type === DeviceType.LIGHT
-//                 ? {
-//                     ...item,
-//                     lastState: item.lastState === "on" ? "off" : "on",
-//                   }
-//                 : item
-//             ),
-//           };
-//         }
-//       );
-
-//       toast.success("Đã cập nhật trạng thái tất cả đèn");
-//     },
-
-//     onError: (error: any) => {
-//       toast.error(error?.message || "Không thể cập nhật trạng thái đèn");
-//     },
-//   });
-// };
 
 // Điều khiển từng đèn cụ thể
 export const useControlSpecificLight = (room: string) => {
@@ -108,6 +73,26 @@ export const useControlSpecificLight = (room: string) => {
     },
     onError: (error: any) => {
       toast.error(error?.response?.data?.message || error?.message || "Không thể điều khiển đèn");
+    },
+  });
+};
+
+export const useDeleteDevice = (room: string) => {
+  return useMutation({
+    mutationFn: async ({ deviceId }: { deviceId: string }) => {
+      const res = await api.delete(`/v1/${room}/device/${deviceId}`);
+      return res.data;
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["room-detail", room] });
+      toast.success("Đã xóa thiết bị");
+    },
+    onError: (error: any) => {
+      toast.error(
+        error?.response?.data?.message ||
+          error?.message ||
+          "Không thể xóa thiết bị",
+      );
     },
   });
 };
@@ -142,33 +127,6 @@ export const useControlAllLights = (room: string) => {
   });
 };
 
-// export const useCloseDoor = (room: string) => {
-//   return useMutation({
-//     mutationFn: async ({ open }: { open: boolean }) => {
-//       await api.patch(`/v1/${room}/door`, { state: open });
-
-//       return { success: true };
-//     },
-//     onSuccess: async () => {
-//       queryClient.setQueryData(["room-detail", room], (old: RoomDetail) => {
-//         if (!old) return old;
-//         return {
-//           ...old,
-//           devices: old.devices.map((item) => 
-//             item.type === DeviceType.DOOR ? {
-//               ...item,
-//               lastState: item.lastState === "open" ? "closed": "open"
-//             }: item
-//           )
-//         }
-//       });
-//       toast.success("Đã cập nhật trạng thái cửa thành công");
-//     },
-//     onError: (error: any) => {
-//       toast.error(error?.message || "Không thể cập nhật trạng thái cửa");
-//     },
-//   });
-// };
 
 // Điều khiển từng cửa cụ thể
 export const useControlSpecificDoor = (room: string) => {
