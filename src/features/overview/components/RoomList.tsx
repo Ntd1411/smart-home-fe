@@ -15,6 +15,9 @@ import {
 import { type Room } from "../api/OverviewService";
 import { useNavigate } from "react-router";
 import ROUTES from "@/shared/lib/routes";
+import { useMeQuery } from "@/features/auth/api/AuthService";
+import { hasPermission } from "@/shared/lib/utils";
+import { PERMISSIONS } from "@/shared/constants/permissions";
 
 interface RoomListProps {
   rooms: Room[];
@@ -22,13 +25,44 @@ interface RoomListProps {
 
 export const RoomList = ({ rooms }: RoomListProps) => {
   const navigate = useNavigate();
-  console.log("Rendering RoomList with rooms:", rooms);
+
+  const { data: selfInfo } = useMeQuery();
+  const roles = selfInfo?.data?.roles ?? [];
+  const isSystem = roles.some((role) => role.isSystemRole);
+  const permissions = roles.flatMap((role) => role.permissions) || [];
+
+  const roomPermissionGroup = {
+    "living-room": PERMISSIONS.ROOMS.LIVING_ROOM,
+    "bedroom": PERMISSIONS.ROOMS.BEDROOM,
+    "kitchen": PERMISSIONS.ROOMS.KITCHEN,
+  } as const;
+
+  const allowedRooms = isSystem
+    ? rooms
+    : rooms.filter((room) => {
+        const roomPermission =
+          roomPermissionGroup[room.location as keyof typeof roomPermissionGroup];
+        if (!roomPermission) return false;
+        return hasPermission(permissions, roomPermission.DETAILS);
+      });
 
   if (rooms.length === 0) {
     return (
       <Card>
         <CardContent className="pt-6">
           <p className="text-center text-muted-foreground">Chưa có phòng nào</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (allowedRooms.length === 0) {
+    return (
+      <Card>
+        <CardContent className="pt-6">
+          <p className="text-center text-muted-foreground">
+            Bạn không có quyền truy cập phòng nào
+          </p>
         </CardContent>
       </Card>
     );
@@ -46,7 +80,7 @@ export const RoomList = ({ rooms }: RoomListProps) => {
     <div className="space-y-4">
       <h2 className="text-xl font-semibold">Danh sách phòng</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {rooms.map((room) => (
+        {allowedRooms.map((room) => (
           <Card
             key={room.location}
             className={`cursor-pointer hover:shadow-lg transition-shadow ${

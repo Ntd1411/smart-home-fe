@@ -70,7 +70,8 @@ export const RoomDetailPage = () => {
     );
   }
 
-  const hasAccess = hasPermission(permissions, roomPermissions.DETAILS);
+  const hasAccess =
+    !!roomPermissions && hasPermission(permissions, roomPermissions.DETAILS);
 
   if (!hasAccess) {
     return (

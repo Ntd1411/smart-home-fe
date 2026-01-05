@@ -17,20 +17,31 @@ import {
   useGetUnreadCountQuery
 } from "../api/NotificationService";
 import { NotificationItem } from "../components/NotificationItem";
-import {
-  NotificationSeverity as NotificationSeverityConst,
-  NotificationType as NotificationTypeConst,
-  type NotificationSeverity as NotificationSeverityValue,
-  type NotificationType as NotificationTypeValue,
-} from "@/shared/enums/notification.enum";
 import { FormPageLayout } from "@/shared/components/FormPageLayout";
+import { withPermissionGuard } from "@/shared/components/WithPermissionGuard";
+import { PERMISSIONS } from "@/shared/constants/permissions";
+import { ComponentWithPermissionGuard } from "@/shared/components/ComponentWithPermissionGuard";
 
-export const NotificationPage = () => {
+const NotificationPageComponent = () => {
   const PAGE_SIZE = 10;
 
+  const getRoomLabel = (location: string) => {
+    const normalized = (location || "").trim();
+    switch (normalized) {
+      case "living-room":
+        return "Phòng khách";
+      case "bedroom":
+        return "Phòng ngủ";
+      case "kitchen":
+        return "Nhà bếp";
+      case "bathroom":
+        return "Phòng tắm";
+      default:
+        return normalized || "Không rõ";
+    }
+  };
+
   const [unreadOnly, setUnreadOnly] = useState(false);
-  const [typeFilter, setTypeFilter] = useState<"all" | NotificationTypeValue>("all");
-  const [severityFilter, setSeverityFilter] = useState<"all" | NotificationSeverityValue>("all");
   const [locationFilter, setLocationFilter] = useState<"all" | string>("all");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -78,9 +89,6 @@ export const NotificationPage = () => {
     if (!notifications) return [];
     const query = search.trim().toLowerCase();
     return notifications.filter((n) => {
-      if (typeFilter !== "all" && n.type !== typeFilter) return false;
-      if (severityFilter !== "all" && n.severity !== severityFilter) return false;
-
       if (locationFilter !== "all") {
         if (locationFilter === locationOptions.unknownValue) {
           if (n.location) return false;
@@ -96,11 +104,11 @@ export const NotificationPage = () => {
 
       return true;
     });
-  }, [notifications, locationFilter, locationOptions.unknownValue, search, severityFilter, typeFilter]);
+  }, [notifications, locationFilter, locationOptions.unknownValue, search]);
 
   useEffect(() => {
     setPage(1);
-  }, [locationFilter, search, severityFilter, typeFilter, unreadOnly]);
+  }, [locationFilter, search, unreadOnly]);
 
   const pagination = useMemo(() => {
     const total = filteredNotifications.length;
@@ -168,32 +176,6 @@ export const NotificationPage = () => {
       <div className="p-6 max-w-5xl mx-auto">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
           <div className="flex flex-wrap items-center gap-3">
-            <Select value={typeFilter} onValueChange={(v) => setTypeFilter(v as any)}>
-              <SelectTrigger className="w-44" aria-label="Lọc theo loại">
-                <SelectValue placeholder="Loại" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tất cả loại</SelectItem>
-                <SelectItem value={NotificationTypeConst.SECURITY_ALERT}>Bảo mật</SelectItem>
-                <SelectItem value={NotificationTypeConst.SENSOR_WARNING}>Cảm biến</SelectItem>
-                <SelectItem value={NotificationTypeConst.DEVICE_OFFLINE}>Thiết bị offline</SelectItem>
-                <SelectItem value={NotificationTypeConst.SYSTEM_INFO}>Hệ thống</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={severityFilter} onValueChange={(v) => setSeverityFilter(v as any)}>
-              <SelectTrigger className="w-40" aria-label="Lọc theo mức độ">
-                <SelectValue placeholder="Mức độ" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tất cả mức độ</SelectItem>
-                <SelectItem value={NotificationSeverityConst.LOW}>Thấp</SelectItem>
-                <SelectItem value={NotificationSeverityConst.MEDIUM}>Trung bình</SelectItem>
-                <SelectItem value={NotificationSeverityConst.HIGH}>Cao</SelectItem>
-                <SelectItem value={NotificationSeverityConst.CRITICAL}>Nghiêm trọng</SelectItem>
-              </SelectContent>
-            </Select>
-
             <Select value={locationFilter} onValueChange={(v) => setLocationFilter(v)}>
               <SelectTrigger className="w-44" aria-label="Lọc theo phòng">
                 <SelectValue placeholder="Phòng" />
@@ -202,7 +184,7 @@ export const NotificationPage = () => {
                 <SelectItem value="all">Tất cả phòng</SelectItem>
                 {locationOptions.values.map((loc) => (
                   <SelectItem key={loc} value={loc}>
-                    {loc === locationOptions.unknownValue ? "Không rõ" : loc}
+                    {loc === locationOptions.unknownValue ? "Không rõ" : getRoomLabel(loc)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -235,14 +217,16 @@ export const NotificationPage = () => {
           </Button>
           
           {unreadCount !== undefined && unreadCount > 0 && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleMarkAllAsRead}
-            >
-              <CheckCheck className="w-4 h-4 mr-2" />
-              Đánh dấu tất cả đã đọc
-            </Button>
+            <ComponentWithPermissionGuard permission={PERMISSIONS.NOTIFICATIONS.MARK_ALL_AS_READ}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleMarkAllAsRead}
+              >
+                <CheckCheck className="w-4 h-4 mr-2" />
+                Đánh dấu tất cả đã đọc
+              </Button>
+            </ComponentWithPermissionGuard>
           )}
         </div>
 
@@ -258,11 +242,7 @@ export const NotificationPage = () => {
             <div className="text-center py-12">
               <Bell className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <p className="text-gray-500">
-                {typeFilter !== "all" || severityFilter !== "all"
-                  ? "Không có thông báo phù hợp bộ lọc"
-                  : unreadOnly
-                    ? "Không có thông báo chưa đọc"
-                    : "Không có thông báo nào"}
+                {unreadOnly ? "Không có thông báo chưa đọc" : "Không có thông báo nào"}
               </p>
             </div>
           ) : (
@@ -309,3 +289,8 @@ export const NotificationPage = () => {
     </FormPageLayout>
   );
 };
+
+export const NotificationPage = withPermissionGuard(
+  NotificationPageComponent,
+  PERMISSIONS.NOTIFICATIONS.LIST
+);

@@ -15,11 +15,8 @@ export function withPermissionGuard<T extends object>(
 ) {
   const ProtectedComponent = (props: T) => {
     const { data: selfInfo, isLoading, isPending } = useMeQuery();
-    console.log(selfInfo?.data.roles);
     const permissions =
       selfInfo?.data?.roles.flatMap((role) => role.permissions) || [];
-    console.log(permissions);
-    console.log(permissions.length);
 
     // Loading state
     if (isLoading || isPending) {

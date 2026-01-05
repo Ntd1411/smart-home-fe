@@ -83,23 +83,11 @@ const navMain: NavItem[] = [
     ],
   },
   {
-    title: "Cài đặt",
-    url: "#",
+    title: ROUTES.GENERAL_SETTING.title,
+    url: ROUTES.GENERAL_SETTING.url,
     icon: Settings,
     isActive: true,
-    items: [
-      {
-        title: ROUTES.GENERAL_SETTING.title,
-        url: ROUTES.GENERAL_SETTING.url,
-        requiredPermission: PERMISSIONS.SETTING,
-      },
-      {
-        title: ROUTES.NOTIFICATION_SETTING.title,
-        url: ROUTES.NOTIFICATION_SETTING.url,
-        requiredPermission: PERMISSIONS.SETTING,
-      },
-      
-    ],
+    requiredPermission: PERMISSIONS.SETTING,
   },
   {
     title: ROUTES.NOTIFICATION.title,
