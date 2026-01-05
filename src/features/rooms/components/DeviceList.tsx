@@ -30,6 +30,7 @@ import {
   useCommandAuto,
   useChangeDoorPassword,
   useUpdateDeviceName,
+  useDeleteDevice,
   type RoomDevice,
 } from "../api/RoomService";
 import { DeviceType } from "@/shared/enums/device.enum";
@@ -60,12 +61,14 @@ export const DeviceList = ({ devices, room, permission }: DeviceListProps) => {
     useChangeDoorPassword(room);
   const { mutateAsync: updateDeviceName, isPending: isUpdatingName } =
     useUpdateDeviceName(room);
+  const { mutateAsync: deleteDevice } = useDeleteDevice(room);
 
   const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
   const [editNameDialogOpen, setEditNameDialogOpen] = useState(false);
   const [selectedDoorId, setSelectedDoorId] = useState<string>("");
   const [selectedDeviceId, setSelectedDeviceId] = useState<string>("");
   const [selectedDeviceName, setSelectedDeviceName] = useState<string>("");
+  const [deletingDeviceId, setDeletingDeviceId] = useState<string | null>(null);
   const [controllingLightId, setControllingLightId] = useState<string | null>(
     null
   );
@@ -187,6 +190,20 @@ export const DeviceList = ({ devices, room, permission }: DeviceListProps) => {
   const handleUpdateDeviceName = async (deviceId: string, newName: string) => {
     await updateDeviceName({ deviceId, name: newName });
     setEditNameDialogOpen(false);
+  };
+
+  const handleDeleteDevice = async (deviceId: string, deviceName: string) => {
+    const confirmed = window.confirm(
+      `Bạn chắc chắn muốn xóa thiết bị "${deviceName}" (${deviceId})?`,
+    );
+    if (!confirmed) return;
+
+    setDeletingDeviceId(deviceId);
+    try {
+      await deleteDevice({ deviceId });
+    } finally {
+      setDeletingDeviceId(null);
+    }
   };
 
   if (devicesList.length === 0) {
@@ -439,6 +456,17 @@ export const DeviceList = ({ devices, room, permission }: DeviceListProps) => {
                 >
                   {device.status === "online" ? "Online" : "Offline"}
                 </Badge>
+
+                {device.status !== "online" && (
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    disabled={deletingDeviceId === device.id}
+                    onClick={() => handleDeleteDevice(device.id, device.name)}
+                  >
+                    Xóa
+                  </Button>
+                )}
               </div>
             </div>
           ))}

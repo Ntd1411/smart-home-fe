@@ -2,7 +2,6 @@ import { useSocketStore } from "@/shared/stores/useSocketStore";
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import type { RoomDetail } from "../api/RoomService";
-import type { DeviceStatus } from "@/shared/enums/device.enum";
 
 export const useRoomDetail = (location: string | undefined) => {
   const { socket, isConnected } = useSocketStore();
@@ -26,16 +25,22 @@ export const useRoomDetail = (location: string | undefined) => {
       );
     };
 
-    const handleCurrentStatus = (data: { status: DeviceStatus }) => {
+    const handleCurrentStatus = (data: any) => {
       console.log(data);
       queryClient.setQueryData<RoomDetail>(
         ["room-detail", location],
         (oldData) => {
           if (!oldData) return oldData;
           const updatedDevices = oldData.devices.map((device) => {
+            if (data?.status === "offline") {
               return { ...device, status: data.status };
+            }
+            if (device.id === data?.id) {
+              return { ...device, ...data };
+            }
+            return device;
           });
-      
+
           return {
             ...oldData,
             devices: updatedDevices,
@@ -58,6 +63,7 @@ export const useRoomDetail = (location: string | undefined) => {
     // gỡ event listener cũ của socket
     return () => {
       socket.off(`sensor:${location}`, handleSensorAndDeviceData);
+      socket.off(`device-status:${location}`, handleCurrentStatus);
       socket.off(`device:${location}`, handleSensorAndDeviceData);
     };
   }, [socket, location, queryClient]);
