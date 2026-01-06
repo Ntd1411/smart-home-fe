@@ -70,6 +70,27 @@ export const PERMISSIONS = {
   NOTIFICATIONS: {
     LIST: {
       method: "GET", 
+      path: "/notifications",
+    } as PermissionRequirement,
+    UNREAD_COUNT: {
+      method: "GET",
+      path: "/notifications/unread-count",
+    } as PermissionRequirement,
+    VIEW: {
+      method: "GET",
+      path: "/notifications/:id",
+    } as PermissionRequirement,
+    MARK_AS_READ: {
+      method: "PATCH",
+      path: "/notifications/:id/read",
+    } as PermissionRequirement,
+    MARK_ALL_AS_READ: {
+      method: "PATCH",
+      path: "/notifications/mark-all-read",
+    } as PermissionRequirement,
+    DELETE: {
+      method: "DELETE",
+      path: "/notifications/:id",
     } as PermissionRequirement,
   },
 

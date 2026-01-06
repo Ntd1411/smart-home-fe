@@ -77,10 +77,6 @@ const ROUTES = {
     title: "Cài đặt chung",
     url: '/general-settings'
   },
-  NOTIFICATION_SETTING: {
-    title: "Cài đặt thông báo",
-    url: '/notification-settings'
-  },
   NOTIFICATION: {
     title: "Thông báo",
     url: '/notifications'

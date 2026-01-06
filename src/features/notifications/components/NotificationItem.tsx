@@ -3,6 +3,8 @@ import { Bell, CheckCheck, Mail, Trash2, Info, Shield, ChevronDown, WifiOff, The
 import { Button } from "@/shared/components/ui/button";
 import { NotificationSeverity, NotificationType } from "@/shared/enums/notification.enum";
 import type { Notification } from "../api/NotificationService";
+import { ComponentWithPermissionGuard } from "@/shared/components/ComponentWithPermissionGuard";
+import { PERMISSIONS } from "@/shared/constants/permissions";
 
 interface NotificationItemProps {
   notification: Notification;
@@ -189,21 +191,25 @@ export const NotificationItem = ({ notification, onMarkAsRead, onDelete }: Notif
 
         <div className="flex flex-col items-end gap-2">
           {!notification.isRead && (
+            <ComponentWithPermissionGuard permission={PERMISSIONS.NOTIFICATIONS.MARK_AS_READ}>
+              <Button 
+                size="sm" 
+                variant="outline"
+                onClick={() => onMarkAsRead(notification.id)}
+              >
+                <CheckCheck className="w-4 h-4 mr-1" /> Đánh dấu đã đọc
+              </Button>
+            </ComponentWithPermissionGuard>
+          )}
+          <ComponentWithPermissionGuard permission={PERMISSIONS.NOTIFICATIONS.DELETE}>
             <Button 
               size="sm" 
-              variant="outline"
-              onClick={() => onMarkAsRead(notification.id)}
+              variant="ghost"
+              onClick={() => onDelete(notification.id)}
             >
-              <CheckCheck className="w-4 h-4 mr-1" /> Đánh dấu đã đọc
+              <Trash2 className="w-4 h-4 mr-1" /> Xóa
             </Button>
-          )}
-          <Button 
-            size="sm" 
-            variant="ghost"
-            onClick={() => onDelete(notification.id)}
-          >
-            <Trash2 className="w-4 h-4 mr-1" /> Xóa
-          </Button>
+          </ComponentWithPermissionGuard>
         </div>
       </div>
     </div>

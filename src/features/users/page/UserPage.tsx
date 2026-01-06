@@ -119,39 +119,39 @@ const UserPageComponent = () => {
                         <Eye className="w-4 h-4" />
                       </Button>
                     </ComponentWithPermissionGuard>
+
+                    <ComponentWithPermissionGuard
+                      permission={PERMISSIONS.USERS.UPDATE}
+                    >
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() =>
+                          navigate(ROUTES.USER_EDIT.getPath(user.id))
+                        }
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                    </ComponentWithPermissionGuard>
+
                     {!user.roles.some((role) => role.name === "admin") && (
-                      <>
-                        <ComponentWithPermissionGuard
-                          permission={PERMISSIONS.USERS.UPDATE}
+                      <ComponentWithPermissionGuard
+                        permission={PERMISSIONS.USERS.DELETE}
+                      >
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-red-600 hover:text-red-700"
+                          disabled={deletingId === user.id}
+                          onClick={() => handleDelete(user.id)}
                         >
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() =>
-                              navigate(ROUTES.USER_EDIT.getPath(user.id))
-                            }
-                          >
-                            <Pencil className="w-4 h-4" />
-                          </Button>
-                        </ComponentWithPermissionGuard>
-                        <ComponentWithPermissionGuard
-                          permission={PERMISSIONS.USERS.DELETE}
-                        >
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="text-red-600 hover:text-red-700"
-                            disabled={deletingId === user.id}
-                            onClick={() => handleDelete(user.id)}
-                          >
-                            {deletingId === user.id ? (
-                              <Loader2 className="w-4 h-4 animate-spin" />
-                            ) : (
-                              <Trash className="w-4 h-4" />
-                            )}
-                          </Button>
-                        </ComponentWithPermissionGuard>
-                      </>
+                          {deletingId === user.id ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <Trash className="w-4 h-4" />
+                          )}
+                        </Button>
+                      </ComponentWithPermissionGuard>
                     )}
                   </div>
                 </td>

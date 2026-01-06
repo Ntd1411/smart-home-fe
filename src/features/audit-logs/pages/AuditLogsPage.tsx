@@ -28,16 +28,7 @@ const ACTION_LABELS_VI: Record<string, string> = {
   DELETE: 'Xóa',
   SOFT_DELETE: 'Xóa (mềm)',
   RESTORE: 'Khôi phục',
-  LOGIN: 'Đăng nhập',
-  LOGOUT: 'Đăng xuất',
-  FAILED_LOGIN: 'Đăng nhập thất bại',
-  PASSWORD_CHANGE: 'Đổi mật khẩu',
   PERMISSION_CHANGE: 'Thay đổi quyền',
-  EXPORT: 'Xuất dữ liệu',
-  IMPORT: 'Nhập dữ liệu',
-  VIEW: 'Xem',
-  DOWNLOAD: 'Tải xuống',
-  UPLOAD: 'Tải lên',
   CUSTOM: 'Tùy chỉnh'
 }
 
@@ -49,13 +40,15 @@ const STATUS_LABELS_VI: Record<string, string> = {
 }
 
 const ENTITY_LABELS_VI: Record<string, string> = {
+  User: 'Người dùng',
   UserEntity: 'Người dùng',
+  Role: 'Vai trò',
   RoleEntity: 'Vai trò',
   PermissionEntity: 'Quyền',
   RefreshTokenEntity: 'Refresh token',
   AuditLogEntity: 'Nhật ký hoạt động',
   SettingEntity: 'Cài đặt',
-  SecuritySettingEntity: 'Cài đặt bảo mật',
+  SecuritySettingEntity: 'Cài đặt',
   NotificationEntity: 'Thông báo',
   DeviceEntity: 'Thiết bị',
   Device: 'Thiết bị',
